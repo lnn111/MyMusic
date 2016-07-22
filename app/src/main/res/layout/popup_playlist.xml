@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pop_title_layout"
+        android:background="#DDE4EA">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pop_mode_btn"
+            android:src="@drawable/ic_player_mode_all_default"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pop_num_tv"
+            android:text="播放队列"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"/>
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pop_clear_btn"
+            android:src="@drawable/kg_skin_src_image_btn_down_delete_default"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pop_close_tv"
+        android:text="关闭"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pop_list"
+        android:layout_below="@id/pop_title_layout"
+        android:layout_above="@id/pop_close_tv"
+        ></android.support.v7.widget.RecyclerView>
+</RelativeLayout>
