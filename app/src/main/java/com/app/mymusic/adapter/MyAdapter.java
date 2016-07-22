@@ -18,6 +18,9 @@ public class MyAdapter extends BaseQuickAdapter<Mp3Info> {
 
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Mp3Info mp3Info) {
-        baseViewHolder.setText(R.id.list_item_tv,mp3Info.getTitle());
+        baseViewHolder.setText(R.id.list_item_tv, mp3Info.getTitle());
     }
+
 }
+
+
