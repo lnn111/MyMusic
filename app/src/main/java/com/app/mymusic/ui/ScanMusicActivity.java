@@ -50,7 +50,6 @@ public class ScanMusicActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_music);
         ButterKnife.bind(this);
-
         scanBtn = (Button) findViewById(R.id.scan_btn);
         scanBtn.setOnClickListener(this);
         mSlideBar = (SlideBar) findViewById(R.id.scan_bar);

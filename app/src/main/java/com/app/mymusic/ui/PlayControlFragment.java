@@ -2,6 +2,7 @@ package com.app.mymusic.ui;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +31,7 @@ import butterknife.OnClick;
 /**
  * Created by Administrator on 2016/7/18.
  */
-public class PlayControlFragment extends Fragment implements Observer  {
+public class PlayControlFragment extends Fragment implements Observer {
 
     @BindView(R.id.pc_album_img)
     ImageView pcAlbumImg;
@@ -51,13 +52,12 @@ public class PlayControlFragment extends Fragment implements Observer  {
     private SongMessage songMessage;
     private Context context;
 
-    private  static  PopWindowInter popWindowInter=null;
+    private static PopWindowInter popWindowInter = null;
 
-    private Handler mHandler=new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case 0:
                     setSongInfo();
                     break;
@@ -71,27 +71,26 @@ public class PlayControlFragment extends Fragment implements Observer  {
         super();
     }
 
-    public void setOnPopWindowInter(PopWindowInter pWindowInter)
-    {
-        this.popWindowInter=pWindowInter;
+    public void setOnPopWindowInter(PopWindowInter pWindowInter) {
+        this.popWindowInter = pWindowInter;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.playcontrolfragment, container, false);
-        context=getActivity();
+        context = getActivity();
         ButterKnife.bind(this, view);
         ObserverUtil.getObservable().addObserver(this);
+        pcSeekbar.setOnSeekBarChangeListener(new PlaySeekBarListener());
         return view;
     }
 
-    @OnClick({R.id.pc_play_btn, R.id.pc_next_btn, R.id.pc_list_btn})
+    @OnClick({R.id.pc_play_btn, R.id.pc_next_btn, R.id.pc_list_btn, R.id.pc_album_img, R.id.pc_seekbar})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.pc_play_btn:
-                switch (songMessage.getType())
-                {
+                switch (songMessage.getType()) {
                     case SongMessage.pause:
                         pcPlayBtn.setImageDrawable(getResources().getDrawable(R.drawable.kg_ic_playing_bar_pause_default));
                         songMessage.setType(SongMessage.play);
@@ -107,8 +106,8 @@ public class PlayControlFragment extends Fragment implements Observer  {
                 }
                 break;
             case R.id.pc_next_btn:
-                int currentIndex=songMessage.getCurrentIndex();
-                currentIndex=currentIndex<songMessage.getMp3InfoList().size()-1?currentIndex+1:0;
+                int currentIndex = songMessage.getCurrentIndex();
+                currentIndex = currentIndex < songMessage.getMp3InfoList().size() - 1 ? currentIndex + 1 : 0;
                 songMessage.setCurrentIndex(currentIndex);
                 songMessage.setType(SongMessage.next);
                 songMessage.setProgress_type(SongMessage.PAUSE_PROGRESS);
@@ -118,21 +117,23 @@ public class PlayControlFragment extends Fragment implements Observer  {
             case R.id.pc_list_btn:
                 popWindowInter.onWindow();
                 break;
+            case R.id.pc_album_img:
+                startActivity(new Intent(context,FullSreenActivity.class));
+                break;
+            case R.id.pc_seekbar:
+                break;
         }
     }
 
 
-
-
     @Override
     public void update(Observable observable, Object data) {
-        songMessage= (SongMessage) data;
-        mp3Info=songMessage.getMp3Info();
-        LogUtil.showLog(mp3Info.getDuration()+"****"+songMessage.getProgress());
-        pcSeekbar.setMax((int)mp3Info.getDuration());
-        pcSeekbar.setProgress((int)songMessage.getProgress());
-        Message msg=mHandler.obtainMessage();
-        msg.what=0;
+        songMessage = (SongMessage) data;
+        mp3Info = songMessage.getMp3Info();
+        pcSeekbar.setMax((int) mp3Info.getDuration());
+        pcSeekbar.setProgress((int) songMessage.getProgress());
+        Message msg = mHandler.obtainMessage();
+        msg.what = 0;
         mHandler.sendMessage(msg);
 
     }
@@ -142,8 +143,9 @@ public class PlayControlFragment extends Fragment implements Observer  {
         pcArtisteTv.setText(mp3Info.getArtist());
     }
 
-    public  interface PopWindowInter
-    {
+
+
+    public interface PopWindowInter {
         void onWindow();
     }
 
@@ -163,5 +165,27 @@ public class PlayControlFragment extends Fragment implements Observer  {
     public void onStop() {
         super.onStop();
         LogUtil.showLog("stop");
+    }
+
+    private class PlaySeekBarListener implements SeekBar.OnSeekBarChangeListener {
+
+        int changeProgress;
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            changeProgress=progress;
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            songMessage.setToProgress(changeProgress);
+            songMessage.setType(SongMessage.next);
+            songMessage.setProgress_type(SongMessage.PAUSE_PROGRESS);
+            ObserverUtil.getObservable().setMessage(songMessage);
+
+        }
     }
 }

@@ -9,37 +9,64 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.app.mymusic.ui.MainActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="sao miao!"
-        android:clickable="true"
-        android:id="@+id/scan_tv"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_local_tv"
-        android:text="本地列表"
-        android:textSize="20sp"
-        android:layout_below="@id/scan_tv"
-        android:layout_marginTop="3dp"/>
-    <EditText
+    <com.app.mymusic.widget.SearchEditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/main_local_tv"
+
+        android:id="@+id/mian_serch_edt"
         android:background="@drawable/local_music_search_bg"
-        android:drawableRight="@android:drawable/ic_menu_search"
         />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@id/mian_serch_edt"
+        android:layout_marginTop="5dp">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="80dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/main_all_tv"
+                android:layout_marginLeft="5dp"
+                android:text="全部歌曲"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/scan_tv"
+                android:text="本地列表"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/mian_download_tv"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:text="下载"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/main_test1"
+                android:layout_marginLeft="5dp"
+                android:text="收藏"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/main_test2"
+                android:text="本地列表111"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/main_test3"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:text="下载222"/>
         </RelativeLayout>
     </LinearLayout>
-
 </RelativeLayout>

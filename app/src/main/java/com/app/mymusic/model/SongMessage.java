@@ -24,6 +24,7 @@ public class SongMessage {
 
     private Mp3Info mp3Info;// 歌曲数据
 
+    private int toProgress=0;
 
     private List<Mp3Info> mp3InfoList=new ArrayList<Mp3Info>();//播放列表
 
@@ -32,6 +33,13 @@ public class SongMessage {
     public SongMessage() {
     }
 
+    public int getToProgress() {
+        return toProgress;
+    }
+
+    public void setToProgress(int toProgress) {
+        this.toProgress = toProgress;
+    }
 
     public int getProgress_type() {
         return progress_type;

@@ -51,7 +51,7 @@ public class MediaPlayerService extends Service implements Observer{
         Context context=MediaPlayerService.this.getBaseContext();
         audioManager= (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         ObserverUtil.getObservable().addObserver(this);
-         executorService= Executors.newSingleThreadExecutor();
+        executorService= Executors.newSingleThreadExecutor();
     }
 
     @Override
@@ -76,6 +76,10 @@ public class MediaPlayerService extends Service implements Observer{
             mPlayer.reset();
             mPlayer.setDataSource(currentMp3Info.getPath());
             mPlayer.prepare();
+            if(songMessage.getToProgress()!=0)
+            {
+                mPlayer.seekTo(songMessage.getToProgress());
+            }
             mPlayer.start();
             isPlaying=true;
             songMessage.setType(SongMessage.play);
@@ -127,7 +131,6 @@ public class MediaPlayerService extends Service implements Observer{
             }
         });
     }
-
     private void pause()
     {
         if(mPlayer==null)
@@ -143,7 +146,6 @@ public class MediaPlayerService extends Service implements Observer{
         }
     }
     private void pauseToPlay() {
-        LogUtil.showLog("11"+isPlaying);
         try {
             if(!isPlaying)
             {
