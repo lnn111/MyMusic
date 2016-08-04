@@ -4,6 +4,7 @@ package com.app.mymusic.model;
  * Created by Administrator on 2016/7/13.
  */
 public class Mp3Info {
+
     private long id; // 歌曲ID 3
     private String title; // 歌曲名称 0
     private String album; // 专辑 7
@@ -33,7 +34,6 @@ public class Mp3Info {
     }
 
     public Mp3Info( ) {
-
     }
 
     public String getAlbum() {

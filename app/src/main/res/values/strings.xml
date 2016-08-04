@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MyMusic</string>
+
+    <string name="title_activity_fullscreen1">Fullscreen1Activity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

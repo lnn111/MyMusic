@@ -8,6 +8,8 @@ public class Constants {
      * 数据库名
      */
     public static final String DB_NAME = "happy_player.db";
+    public static final String DB_USER = "user.db";
+
     public static int PLAY_MODE=0;
 
 }

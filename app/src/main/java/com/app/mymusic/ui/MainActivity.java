@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
@@ -15,9 +17,15 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.app.mymusic.R;
+import com.app.mymusic.model.NetMusic;
 import com.app.mymusic.service.FloatMusicService;
+import com.app.mymusic.utils.DownLoadUtil;
 import com.app.mymusic.utils.LogUtil;
 import com.app.mymusic.widget.SearchEditText;
+import com.google.gson.Gson;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,23 +39,47 @@ public class MainActivity extends AppCompatActivity {
     SearchEditText mianSerchEdt;
     @BindView(R.id.mian_download_tv)
     TextView mianDownloadTv;
+    @BindView(R.id.main_test1)
+    TextView mainTest1;
+    @BindView(R.id.main_test2)
+    TextView mainTest2;
+    @BindView(R.id.main_test3)
+    TextView mainTest3;
 
+    private Handler mHandler=new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String str= (String) msg.obj;
+            switch (msg.what)
+            {
+                case 110:
+                    LogUtil.showLog(str);
+                    jsonUtil(str);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
-    BroadcastReceiver re=new BroadcastReceiver() {
+    BroadcastReceiver re = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction())
-            {
+            switch (intent.getAction()) {
                 case "Previous":
-                break;
+                    break;
                 case "Pause":
-                break;
+                    break;
                 case "Next":
-                break;
+                    break;
             }
             LogUtil.showLog(intent.getAction());
         }
     };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,19 +88,22 @@ public class MainActivity extends AppCompatActivity {
         mianSerchEdt.setOnEditTextListener(new SearchEditText.OnEditTextListener() {
             @Override
             public void OnSearch() {
-                LogUtil.showLog("search");
+                String keyword=mianSerchEdt.getText().toString().trim();
+                Intent i=new Intent(MainActivity.this,SearchActivity.class);
+                i.putExtra("keyword",keyword);
+                startActivity(i);
             }
         });
-        IntentFilter filter=new IntentFilter();
+        IntentFilter filter = new IntentFilter();
         filter.addAction("Previous");
         filter.addAction("Pause");
         filter.addAction("Next");
         filter.addAction("hello");
-        registerReceiver(re,filter);
+        registerReceiver(re, filter);
 
     }
 
-    @OnClick({R.id.scan_tv, R.id.mian_download_tv})
+    @OnClick({R.id.scan_tv, R.id.mian_download_tv, R.id.main_test1})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_tv:
@@ -76,16 +111,37 @@ public class MainActivity extends AppCompatActivity {
                 startService(new Intent(MainActivity.this, FloatMusicService.class));
                 break;
             case R.id.mian_download_tv:
-                       test();
+//                test();
+                DownLoadUtil.getMusic();
+                break;
+            case R.id.main_test1:
+//                startActivity(new Intent(MainActivity.this, Fullscreen1Activity.class));
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String httpUrl = "http://apis.baidu.com/geekery/music/query";
+                        String s="十年";
+                        try {
+                           s= URLEncoder.encode(s,"UTF-8");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        String httpArg = "s=love&size=10&page=1";
+//                        String httpArg = "s="+s+"&size=10&page=1";
+                        LogUtil.showLog(httpArg);
+                        DownLoadUtil.request(httpUrl, httpArg,mHandler);
+                    }
+                }).start();
+
                 break;
         }
     }
 
     private void test() {
-        int playPauseButtonPosition=0;
-        NotificationManager manager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        RemoteViews view=new RemoteViews(this.getPackageName(),R.layout.notification_play);
-        view.setTextViewText(R.id.pc_name_tv,"gequ mingzi ");
+        int playPauseButtonPosition = 0;
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        RemoteViews view = new RemoteViews(this.getPackageName(), R.layout.notification_play);
+        view.setTextViewText(R.id.pc_name_tv, "gequ mingzi ");
         Notification notification1 = new NotificationCompat.Builder(this)
 //                .setStyle(new NotificationCompat.MediaStyle()
 //                        .setShowActionsInCompactView(
@@ -97,23 +153,31 @@ public class MainActivity extends AppCompatActivity {
 
         //定义Notification的各种属性
 //        notification1.contentView = view;
-        notification1.flags=Notification.FLAG_AUTO_CANCEL;
-        notification1.defaults=Notification.DEFAULT_SOUND;
+        notification1.flags = Notification.FLAG_AUTO_CANCEL;
+        notification1.defaults = Notification.DEFAULT_SOUND;
         // 通知的时间
         notification1.when = System.currentTimeMillis();
-        PendingIntent pi= PendingIntent.getActivity(this,1,new Intent(this,MainActivity.class),PendingIntent.FLAG_CANCEL_CURRENT);
-        notification1.contentIntent=pi;
+        PendingIntent pi = PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT);
+        notification1.contentIntent = pi;
 
-        Intent i2=new Intent();
+        Intent i2 = new Intent();
         i2.setAction("hello");
-        PendingIntent p2=PendingIntent.getBroadcast(this,2,i2,PendingIntent.FLAG_CANCEL_CURRENT);
-        view.setOnClickPendingIntent(R.id.pc_play_btn,p2);
-        manager.notify(0,notification1);
+        PendingIntent p2 = PendingIntent.getBroadcast(this, 2, i2, PendingIntent.FLAG_CANCEL_CURRENT);
+        view.setOnClickPendingIntent(R.id.pc_play_btn, p2);
+        manager.notify(0, notification1);
     }
 
-    public void testRealm()
+    public void testRealm() {
+
+    }
+    public void jsonUtil(String str)
     {
-
+        NetMusic n =new Gson().fromJson(str,NetMusic.class);
+        LogUtil.showLog(n.getCode()+"***");
+        LogUtil.showLog(n.getData().getKeyword()+"***");
+        LogUtil.showLog(n.getData().getData().get(0).getAlbum_name()+"***");
+        LogUtil.showLog(n.getData().getData().get(0).getFilesize()+"***");
+        LogUtil.showLog(n.getData().getData().get(0).getDuration()+"***");
+        LogUtil.showLog(n.getData().getData().get(0).getExtname()+"***");
     }
-
 }

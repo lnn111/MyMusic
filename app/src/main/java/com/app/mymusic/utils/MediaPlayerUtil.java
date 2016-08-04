@@ -21,16 +21,13 @@ public class MediaPlayerUtil implements Observer{
     private Context context;
     private static Mp3Info currentMp3Info;
     private  int position;
-
     public MediaPlayerUtil(Context context,List<Mp3Info> lists,int position) {
         this.context=context;
         this.lists=lists;
         this.position=position;
-
         songMessage= new SongMessage();
         songMessage.setMp3InfoList(lists);
         songMessage.setCurrentIndex(position);
-
         currentMp3Info=songMessage.getMp3Info();
 
     }

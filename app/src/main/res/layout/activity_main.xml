@@ -12,7 +12,6 @@
     <com.app.mymusic.widget.SearchEditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
-
         android:id="@+id/mian_serch_edt"
         android:background="@drawable/local_music_search_bg"
         />

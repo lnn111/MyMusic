@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.mymusic.ui.FullSreenActivity">
+    tools:context="com.app.mymusic.ui.FullSreenActivity"
+    android:id="@+id/full_layout">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
