@@ -16,6 +16,15 @@ public class Mp3Info {
     private String path; // 歌曲路径 5
     private String category;// 分类
     private String childCategory;// 子分类
+    private String httpUrl;
+
+    public String getHttpUrl() {
+        return httpUrl;
+    }
+
+    public void setHttpUrl(String httpUrl) {
+        this.httpUrl = httpUrl;
+    }
 
     public String getCategory() {
         return category;

@@ -15,15 +15,18 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 import com.app.mymusic.R;
 import com.app.mymusic.common.Constants;
 import com.app.mymusic.model.Mp3Info;
 import com.app.mymusic.model.SongMessage;
 import com.app.mymusic.utils.ObserverUtil;
 import com.app.mymusic.widget.PopWindowLayout;
+
 import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

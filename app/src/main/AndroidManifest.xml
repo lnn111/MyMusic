@@ -38,7 +38,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen1"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".ui.BasicActivity"></activity>
+        <activity android:name=".ui.BasicActivity" />
+        <activity android:name=".ui.DownLoadActivity"></activity>
     </application>
 
 </manifest>

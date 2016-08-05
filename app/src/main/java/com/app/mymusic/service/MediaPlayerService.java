@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
@@ -56,6 +57,7 @@ public class MediaPlayerService extends Service implements Observer{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        LogUtil.showLog("service---onStartCommand");
         isServiceRunning=true;
         if(!isFirstStart)
         {
@@ -74,7 +76,16 @@ public class MediaPlayerService extends Service implements Observer{
         currentMp3Info=songMessage.getMp3Info();
         try {
             mPlayer.reset();
-            mPlayer.setDataSource(currentMp3Info.getPath());
+            String str=currentMp3Info.getPath();
+            String str1=currentMp3Info.getHttpUrl();
+            if(currentMp3Info.getPath()==null||currentMp3Info.getPath().equals(""))
+            {
+                Uri uri=Uri.parse(currentMp3Info.getHttpUrl());
+                mPlayer.setDataSource(getApplicationContext(),uri);
+                LogUtil.showLog(currentMp3Info.getHttpUrl());
+            }else{
+                mPlayer.setDataSource(currentMp3Info.getPath());
+            }
             mPlayer.prepare();
             if(songMessage.getToProgress()!=0)
             {
@@ -110,7 +121,6 @@ public class MediaPlayerService extends Service implements Observer{
             }
         });
     }
-
     public void startProgressThread()
     {
         executorService.execute(new Runnable() {
