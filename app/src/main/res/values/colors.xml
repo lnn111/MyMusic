@@ -4,5 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="black_overlay">#66000000</color>
+    <color name="black_overlay">#4256a4</color>
+
+    <color name="light_blue">#8baded</color>
+    <color name="light_gray">#fadddada</color>
+    <color name="light_yellow">#fdf6e19e</color>
+    <color name="light_white">#fdf6f5f1</color>
+
 </resources>

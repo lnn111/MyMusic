@@ -30,10 +30,12 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ScanMusicActivity extends AppCompatActivity implements View.OnClickListener ,Observer {
+public class ScanMusicActivity extends AppCompatActivity implements View.OnClickListener, Observer {
 
     @BindView(R.id.scan_card)
     CardView scanCard;
+    @BindView(R.id.scan_num)
+    TextView scanNum;
     private String ALL_CHARACTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ#";
     private String[] sections = {"A", "B", "C", "D", "E", "F", "G", "H", "I",
             "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
@@ -57,9 +59,8 @@ public class ScanMusicActivity extends AppCompatActivity implements View.OnClick
         mRecyclerView = (RecyclerView) findViewById(R.id.scan_list);
         floatletter = (TextView) findViewById(R.id.floatletter);
         songDB = new SongDB(ScanMusicActivity.this);
-        lists=songDB.getListSortByCategory();
-        if(lists!=null&&lists.size()>0)
-        {
+        lists = songDB.getListSortByCategory();
+        if (lists != null && lists.size() > 0) {
             maps = songDB.getMapsByCategory();
             setDatas();
         }
@@ -67,45 +68,44 @@ public class ScanMusicActivity extends AppCompatActivity implements View.OnClick
     Map<String, Integer> maps;
     private Dialog mDialog;
     List<Mp3Info> lists;
+
     @Override
     public void onClick(View v) {
 //        mDialog= DialogUtil.showDialog(this,null);
 //        mDialog.show();
         songDB.getOriginalDatas();
-        List<Mp3Info> datas=songDB.getListSortByCategory();
+        List<Mp3Info> datas = songDB.getListSortByCategory();
         lists.clear();
         lists.addAll(datas);
         maps = songDB.getMapsByCategory();
-        if(myAdapter==null)
-        {
+        if (myAdapter == null) {
             setDatas();
-        }
-        else{
+        } else {
             myAdapter.notifyDataSetChanged();
+            scanNum.setText(lists.size()+"首歌曲");
         }
         scanBtn.setVisibility(View.GONE);
     }
 
-    public  void setDatas()
-    {
-            myAdapter = new MyAdapter(R.layout.item_scan, lists);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+    public void setDatas() {
+        scanNum.setText(lists.size()+"首歌曲");
+        myAdapter = new MyAdapter(R.layout.item_scan, lists);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 //          linearLayoutManager.setReverseLayout(true);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-            if (myAdapter != null) {
-                mRecyclerView.setAdapter(myAdapter);
-                myAdapter.setOnRecyclerViewItemClickListener(new RecyclerViewItemClickListener());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        if (myAdapter != null) {
+            mRecyclerView.setAdapter(myAdapter);
+            myAdapter.setOnRecyclerViewItemClickListener(new RecyclerViewItemClickListener());
         }
-        if(mDialog!=null)
-        {
+        if (mDialog != null) {
             mDialog.cancel();
         }
     }
+
     @Override
     public void update(Observable observable, Object data) {
 
     }
-
 
 
     class TouchLetterListenner implements SlideBar.OnTouchLetterListenner {
@@ -116,31 +116,29 @@ public class ScanMusicActivity extends AppCompatActivity implements View.OnClick
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 floatletter.setVisibility(View.GONE);
             }
-            int position=0;
-            if(maps!=null&&str!=null)
-            {
-                position= maps.get(str);
+            int position = 0;
+            if (maps != null && str != null) {
+                position = maps.get(str);
 
             }
             mRecyclerView.smoothScrollToPosition(position);
         }
     }
-    class RecyclerViewItemClickListener implements BaseQuickAdapter.OnRecyclerViewItemClickListener
-    {
+
+    class RecyclerViewItemClickListener implements BaseQuickAdapter.OnRecyclerViewItemClickListener {
         @Override
         public void onItemClick(View view, int position) {
-            MediaPlayerUtil util=new MediaPlayerUtil(ScanMusicActivity.this,lists,position);
+            MediaPlayerUtil util = new MediaPlayerUtil(ScanMusicActivity.this, lists, position);
             util.play();
             scanCard.setVisibility(View.VISIBLE);
-            PlayControlFragment playControlFragment=new PlayControlFragment();
-            playControlFragment.setOnPopWindowInter(new PlayControlFragment.PopWindowInter()
-            {
+            PlayControlFragment playControlFragment = new PlayControlFragment();
+            playControlFragment.setOnPopWindowInter(new PlayControlFragment.PopWindowInter() {
                 @Override
                 public void onWindow() {
-                    PopWindowLayout pwLyout=new PopWindowLayout(lists);
-                    PopupWindow pw=pwLyout.getPopWindow(ScanMusicActivity.this);
+                    PopWindowLayout pwLyout = new PopWindowLayout(lists);
+                    PopupWindow pw = pwLyout.getPopWindow(ScanMusicActivity.this);
 //                            scanCard.setVisibility(View.GONE);
-                            pw.showAsDropDown(mRecyclerView,-60,-360, Gravity.BOTTOM);
+                    pw.showAsDropDown(mRecyclerView, -60, -360, Gravity.BOTTOM);
                 }
             });
         }

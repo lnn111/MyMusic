@@ -10,8 +10,11 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
@@ -45,15 +48,20 @@ public class MainActivity extends AppCompatActivity {
     TextView mainTest2;
     @BindView(R.id.main_test3)
     TextView mainTest3;
+    @BindView(R.id.main_toolbar)
+    Toolbar mainToolbar;
+    @BindView(R.id.main_all_tv)
+    TextView mainAllTv;
+    @BindView(R.id.main_drawerlayout)
+    DrawerLayout mainDrawerlayout;
+    private ActionBarDrawerToggle mDrawerToggle;
 
-    private Handler mHandler=new Handler()
-    {
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            String str= (String) msg.obj;
-            switch (msg.what)
-            {
+            String str = (String) msg.obj;
+            switch (msg.what) {
                 case 110:
                     LogUtil.showLog(str);
                     jsonUtil(str);
@@ -79,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
         mianSerchEdt.setOnEditTextListener(new SearchEditText.OnEditTextListener() {
             @Override
             public void OnSearch() {
-                String keyword=mianSerchEdt.getText().toString().trim();
-                Intent i=new Intent(MainActivity.this,SearchActivity.class);
-                i.putExtra("keyword",keyword);
+                String keyword = mianSerchEdt.getText().toString().trim();
+                Intent i = new Intent(MainActivity.this, SearchActivity.class);
+                i.putExtra("keyword", keyword);
                 startActivity(i);
             }
         });
@@ -100,10 +107,30 @@ public class MainActivity extends AppCompatActivity {
         filter.addAction("Next");
         filter.addAction("hello");
         registerReceiver(re, filter);
+        setSupportActionBar(mainToolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mDrawerToggle=new ActionBarDrawerToggle(this,mainDrawerlayout,mainToolbar,R.string.app_name,R.string.app_name)
+        {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
 
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+            }
+        };
+        mainDrawerlayout.addDrawerListener(mDrawerToggle);
     }
 
-    @OnClick({R.id.scan_tv, R.id.mian_download_tv, R.id.main_test1})
+    @OnClick({R.id.scan_tv, R.id.mian_download_tv, R.id.main_test1, R.id.main_test2})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.scan_tv:
@@ -111,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 startService(new Intent(MainActivity.this, FloatMusicService.class));
                 break;
             case R.id.mian_download_tv:
-//                test();
-                DownLoadUtil.getMusic();
+                startActivity(new Intent(MainActivity.this, DownLoadActivity.class));
                 break;
             case R.id.main_test1:
 //                startActivity(new Intent(MainActivity.this, Fullscreen1Activity.class));
@@ -120,19 +146,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         String httpUrl = "http://apis.baidu.com/geekery/music/query";
-                        String s="十年";
+                        String s = "十年";
                         try {
-                           s= URLEncoder.encode(s,"UTF-8");
+                            s = URLEncoder.encode(s, "UTF-8");
                         } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                         }
                         String httpArg = "s=love&size=10&page=1";
 //                        String httpArg = "s="+s+"&size=10&page=1";
                         LogUtil.showLog(httpArg);
-                        DownLoadUtil.request(httpUrl, httpArg,mHandler);
+                        DownLoadUtil.request(httpUrl, httpArg, mHandler);
                     }
                 }).start();
 
+                break;
+            case R.id.main_test2:
+                startActivity(new Intent(MainActivity.this, DownLoadActivity.class));
                 break;
         }
     }
@@ -170,14 +199,14 @@ public class MainActivity extends AppCompatActivity {
     public void testRealm() {
 
     }
-    public void jsonUtil(String str)
-    {
-        NetMusic n =new Gson().fromJson(str,NetMusic.class);
-        LogUtil.showLog(n.getCode()+"***");
-        LogUtil.showLog(n.getData().getKeyword()+"***");
-        LogUtil.showLog(n.getData().getData().get(0).getAlbum_name()+"***");
-        LogUtil.showLog(n.getData().getData().get(0).getFilesize()+"***");
-        LogUtil.showLog(n.getData().getData().get(0).getDuration()+"***");
-        LogUtil.showLog(n.getData().getData().get(0).getExtname()+"***");
+
+    public void jsonUtil(String str) {
+        NetMusic n = new Gson().fromJson(str, NetMusic.class);
+        LogUtil.showLog(n.getCode() + "***");
+        LogUtil.showLog(n.getData().getKeyword() + "***");
+        LogUtil.showLog(n.getData().getData().get(0).getAlbum_name() + "***");
+        LogUtil.showLog(n.getData().getData().get(0).getFilesize() + "***");
+        LogUtil.showLog(n.getData().getData().get(0).getDuration() + "***");
+        LogUtil.showLog(n.getData().getData().get(0).getExtname() + "***");
     }
 }

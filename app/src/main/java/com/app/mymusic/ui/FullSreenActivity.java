@@ -81,8 +81,6 @@ public class FullSreenActivity extends AppCompatActivity implements Observer {
             }
         }
     };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,7 +170,6 @@ public class FullSreenActivity extends AppCompatActivity implements Observer {
             case R.id.full_download_btn:
                 break;
             case R.id.full_playlist_btn:
-
                 PopWindowLayout pwLyout=new PopWindowLayout(songMessage.getMp3InfoList());
                 PopupWindow pw=pwLyout.getPopWindow(FullSreenActivity.this);
 //                            scanCard.setVisibility(View.GONE);
@@ -180,7 +177,6 @@ public class FullSreenActivity extends AppCompatActivity implements Observer {
                 break;
         }
     }
-
     @Override
     public void update(Observable observable, Object data) {
         songMessage = (SongMessage) data;
